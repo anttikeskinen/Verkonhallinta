@@ -1,0 +1,49 @@
+---
+- name: Collect router information
+  hosts: all
+  gather_facts: no
+
+  vars:
+    ansible_network_os: frr
+    ansible_connection: network_cli
+    ansible_user: admin
+    ansible_become: true
+    ansible_become_method: enable
+
+  tasks:
+
+    - name: Get hostname
+      ansible.netcommon.cli_command:
+        command: hostname
+      register: hostname_out
+
+    - name: Show hostname
+      debug:
+        var: hostname_out.stdout
+
+    - name: Get interfaces and IP addresses
+      ansible.netcommon.cli_command:
+        command: ip addr
+      register: ip_out
+
+    - name: Show interfaces and IP addresses
+      debug:
+        var: ip_out.stdout
+
+    - name: Get operating system information
+      ansible.netcommon.cli_command:
+        command: uname -a
+      register: os_out
+
+    - name: Show operating system information
+      debug:
+        var: os_out.stdout
+
+    - name: Get uptime
+      ansible.netcommon.cli_command:
+        command: uptime
+      register: uptime_out
+
+    - name: Show uptime
+      debug:
+        var: uptime_out.stdout

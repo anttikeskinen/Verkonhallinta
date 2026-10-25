@@ -1,0 +1,13 @@
+---
+- name: Configure loopback interface
+  hosts: r3-branch
+  gather_facts: no
+
+  tasks:
+
+    - name: Configure loopback
+      ansible.netcommon.cli_command:
+        command: |
+          vtysh -c "configure terminal" \
+                -c "interface lo10" \
+                -c "ip address 192.0.2.3/32"

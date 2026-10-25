@@ -1,0 +1,27 @@
+---
+- name: Verify router configuration
+  hosts: all
+  gather_facts: no
+
+  tasks:
+
+    - name: Verify routers are reachable
+      ping:
+
+    - name: Check loopback configuration on r3
+      ansible.netcommon.cli_command:
+        command: vtysh -c "show running-config"
+      register: running_config
+      when: inventory_hostname == "r3-branch"
+
+    - name: Verify Loopback10 exists
+      assert:
+        that:
+          - "'interface lo10' in running_config.stdout"
+      when: inventory_hostname == "r3-branch"
+
+    - name: Verify Loopback10 IP address
+      assert:
+        that:
+          - "'192.0.2.3/32' in running_config.stdout"
+      when: inventory_hostname == "r3-branch"
