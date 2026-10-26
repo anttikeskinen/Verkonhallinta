@@ -1,0 +1,34 @@
+---
+- name: Install web server on web1
+  hosts: web1
+  become: yes
+
+  tasks:
+
+    - name: Update package cache
+      apt:
+        update_cache: yes
+
+    - name: Install nginx
+      apt:
+        name: nginx
+        state: present
+
+    - name: Create index page
+      copy:
+        dest: /var/www/html/index.html
+        content: |
+          <html>
+            <body>
+              <h1>web1</h1>
+              <p>Web server installed by Ansible</p>
+            </body>
+          </html>
+
+    - name: Start nginx
+      shell: nginx
+
+    - name: Verify web page
+      uri:
+        url: http://localhost
+        return_content: yes

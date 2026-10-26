@@ -1,0 +1,14 @@
+---
+- name: Collect router information
+  hosts: routers
+  gather_facts: no
+
+  tasks:
+    - name: Show hostname
+      ansible.netcommon.cli_command:
+        command: hostname
+      register: hostname_out
+
+    - debug:
+        var: hostname_out.stdout
+
